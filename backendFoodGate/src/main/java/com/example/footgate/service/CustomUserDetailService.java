@@ -1,8 +1,8 @@
 package com.example.footgate.service;
 
-import com.example.footgate.entities.USER_ROLE;
 import com.example.footgate.entities.User;
 import com.example.footgate.repository.UserRepository;
+import com.example.footgate.entities.USER_ROLE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

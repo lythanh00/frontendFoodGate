@@ -8,6 +8,8 @@ import com.example.footgate.request.CreateFoodRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +34,7 @@ public class FoodServiceImp implements FoodService {
         food.setIngredients(req.getIngredients());
         food.setSeasonal(req.isSesional());
         food.setVegetarian(req.isVegetarian());
-        food.setCreationDate(new Date());
-
+        food.setCreationDate(LocalDateTime.now());
         Food savedFood = foodRepository.save(food);
         restaurant.getFoods().add(savedFood);
 
