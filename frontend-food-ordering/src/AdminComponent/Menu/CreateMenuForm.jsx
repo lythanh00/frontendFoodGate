@@ -22,7 +22,7 @@ const initialValues = {
   images: []
 };
 
-const CreateRestaurantForm = () => {
+const CreateMenuForm = () => {
   const [uploadImage, setUploadImage] = useState(false);
   const formik = useFormik({
     initialValues,
@@ -271,4 +271,4 @@ const CreateRestaurantForm = () => {
   );
 };
 
-export default CreateRestaurantForm;
+export default CreateMenuForm;
