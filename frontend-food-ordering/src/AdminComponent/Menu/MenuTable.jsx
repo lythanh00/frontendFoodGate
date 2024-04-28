@@ -3,15 +3,17 @@ import React from 'react';
 import { Box, Card, CardHeader, Paper, TableRow, TableBody, TableHead, TableCell, TableContainer, Table, IconButton } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import DeleteIcon from '@mui/icons-material/Delete'; // Import Delete icon
+import { useNavigate } from 'react-router-dom';
 const orders = [1, 1, 1, 1, 1, 1, 1];
 
 export default function MenuTable() {
+  const navigate=useNavigate();
   return (
     <Box>
       <Card className='mt-1'>
         <CardHeader
           action={
-            <IconButton aria-label="settings">
+            <IconButton onClick={()=>navigate("/admin/restaurants/add-menu")} aria-label="settings">
               <CreateIcon />
             </IconButton>
           }
