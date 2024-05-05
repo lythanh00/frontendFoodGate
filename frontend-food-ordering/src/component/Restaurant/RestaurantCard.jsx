@@ -15,7 +15,7 @@ const RestaurantCard = ({item}) => {
   const handleAddToFavorite=()=>{
     dispatch(addToFavorite({restaurantId:item.id,jwt}))
   }
-  //
+  
   const handleNavigateToRestaurant=()=>{
     if(item.open){
       navigate(`/restaurant/${item.address.city}/${item.name}/${item.id}`)
