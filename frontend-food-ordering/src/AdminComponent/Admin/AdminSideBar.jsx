@@ -15,7 +15,7 @@ const menu=[
     {title:"Dashboard",icon:<Dashboard/>,path:"/"},
     {title:"Orders",icon:<ShoppingBag/>,path:"/orders"},
     {title:"Menu",icon:<ShopTwoIcon/>,path:"/menu"},
-    {title:"FoodCategory",icon:<FastfoodIcon/>,path:"/category"},
+    {title:"Food Category",icon:<FastfoodIcon/>,path:"/category"},
     {title:"Ingredients",icon:<FastfoodIcon/>,path:"/ingredients"},
     {title:"Events",icon:<EventIcon/>,path:"/events"},
     {title:"Details",icon:<AdminPanelSettingsIcon/>,path:"/details"},

@@ -3,6 +3,9 @@ import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs';
 import React from 'react'
+import { format } from 'date-fns';
+import { useDispatch, useSelector } from 'react-redux';
+import { createEventAction } from '../../component/State/Restaurant/Action';
 const style = {
   position: 'absolute' ,
   top: '50%',
@@ -28,10 +31,18 @@ export const Events = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [formValues,setFormValues] = React.useState(initialValues)
+  const dispatch=useDispatch()
+  const jwt=localStorage.getItem('jwt')
+  const {restaurant}=useSelector(store=>store)
 
   const handleSubmit = (e) =>{
     e.preventDefault()
     console.log("submit ",formValues);
+    dispatch(createEventAction({
+      data:formValues,
+      restaurantId:restaurant.usersRestaurant?.id,
+      jwt
+    }))
     setFormValues(initialValues)
 
   }
@@ -39,8 +50,10 @@ export const Events = () => {
     setFormValues({...formValues,[e.target.name]:e.target.value})
   }
   const handleDateChange = (date,dateType) =>{
-    const formatedDate=dayjs(date).format("MMMM DD,YYYY hh:mm A");
-    setFormValues({...formValues,[dateType]:formatedDate})
+    const formatedDate=dayjs(date).format('MMMM DD, YYYY hh:mm A');
+    // const formattedDate = format(date, 'MMMM DD, YYYY hh:mm A');
+    setFormValues({...formValues,[dateType]:date})
+    
   }
   return (
     <div>
@@ -115,6 +128,11 @@ export const Events = () => {
               </LocalizationProvider>
               </Grid>
             </Grid>
+            <Box mt={2}>
+              <Button variant='contained' color='primary' type='submit'>
+                Submit
+              </Button>
+            </Box>
 
           </form>
           
