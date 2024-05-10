@@ -2,9 +2,12 @@ import React from 'react'
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 
-const OrderCard = ({item, order}) => {
+const OrderCard = ({item, order, onClick}) => {
+  const handleClick = () => {
+    onClick(); // Gọi hàm xử lý sự kiện click được truyền từ component cha
+  };
   return (
-    <Card className='flex justify-between items-center p-5'>
+    <Card className='flex justify-between items-center p-5 cursor-pointer' onClick={handleClick}>
         <div className='flex items-center space-x-5'>
             <img 
             className='h-16 w-16'
@@ -14,6 +17,7 @@ const OrderCard = ({item, order}) => {
             />
             <div>
                 <p>{item.food.name}</p>
+                {/* <p>{item.food.creationDate}</p> */}
                 {/* <p>binary</p> */}
                 <p>${item.totalPrice}</p>
                 {/* <p>$399</p> */}
