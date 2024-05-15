@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import { categorizeIngredients } from '../util/categorizeIngredients';
 import { useDispatch } from 'react-redux';
 import { addItemToCart } from '../State/Cart/Action';
-
+import { findCart } from '../State/Cart/Action'; // Import findCart action
 
 
 const demo=[
@@ -47,7 +47,8 @@ const MenuCard = ({item}) => {
         }
       }
       dispatch(addItemToCart(reqData))
-      console.log('req data', reqData)   
+      console.log('req data', reqData) 
+      dispatch(findCart(reqData.token));  
     }
 
   return (
