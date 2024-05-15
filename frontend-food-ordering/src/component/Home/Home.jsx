@@ -45,7 +45,9 @@ const Home = () => {
       </section>
 
       <section className='px-5 lg:px-20 pt-10'>
-            <h1 className='text-2xl font-semibold text-gray-400 pb-8'>Order From Our Handpicked Favorites</h1>
+            <h1 className='text-2xl font-semibold text-gray-400 pb-8'>
+              Restaurants
+            </h1>
             <div className='flex flex-wrap items-center justify-around gap-5'>
                 {
                   restaurant.restaurants.map((item)=><RestaurantCard item={item}/>)

@@ -52,6 +52,7 @@ export const loginUser = (reqData) => async (dispatch) => {
     }
     dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });
     console.log("login success", data);
+    window.location.reload(); // Reload trang sau khi đăng nhập thành công
   } catch (error) {
     dispatch({ type: LOGIN_FAILURE, payload: error });
     console.log("error", error);

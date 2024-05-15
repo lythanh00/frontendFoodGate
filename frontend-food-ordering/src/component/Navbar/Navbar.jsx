@@ -16,6 +16,7 @@ export const Navbar = () => {
   const handleAvatarClick=()=>{
     if(auth.user?.role==="ROLE_CUSTOMER"){
       navigate("/my-profile")
+      console.log('user profile', auth)
     }
     else{
       navigate("/admin/restaurants")
