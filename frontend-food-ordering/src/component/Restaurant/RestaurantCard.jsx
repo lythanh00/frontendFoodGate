@@ -5,6 +5,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToFavorite } from '../State/Authentication/Action';
+import Swal from 'sweetalert2'
 import { isPresentInFavorites } from '../config/logic';
 
 const RestaurantCard = ({item}) => {
@@ -13,7 +14,25 @@ const RestaurantCard = ({item}) => {
   const jwt=localStorage.getItem('jwt')
   const {auth}=useSelector(store=>store)
   const handleAddToFavorite=()=>{
-    dispatch(addToFavorite({restaurantId:item.id,jwt}))
+    Swal.fire({
+      title: "Are you sure?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Success!",
+          text: "Your action has been success.",
+          icon: "success"
+        });
+        dispatch(addToFavorite({restaurantId:item.id,jwt}))
+      }
+    });
+    
   }
   
   const handleNavigateToRestaurant=()=>{
