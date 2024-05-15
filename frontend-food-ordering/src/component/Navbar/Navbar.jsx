@@ -8,11 +8,16 @@ import Box from '@mui/material/Box';
 import { Person } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+import { findCart } from '../State/Cart/Action';
+import { useDispatch } from 'react-redux';
 export const Navbar = () => {
+  const dispatch=useDispatch();
   const {auth,cart}=useSelector(store=>store)
   const navigate=useNavigate()
-
+  const handleCartClick = async () => {
+    navigate('/cart');
+    window.location.reload();
+  };
   const handleAvatarClick=()=>{
     if(auth.user?.role==="ROLE_CUSTOMER"){
       navigate("/my-profile")
@@ -48,7 +53,7 @@ export const Navbar = () => {
         </div>
 
         <div className=''>
-          <IconButton onClick={()=>navigate('/cart')}>
+          <IconButton onClick={handleCartClick}>
             <Badge color='black' badgeContent={cart.cart?.item.length}>
               <ShoppingCartIcon sx={{fontSize:"1.5rem"}}/>
             </Badge>
