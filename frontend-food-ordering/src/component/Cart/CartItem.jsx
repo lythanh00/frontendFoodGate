@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -8,16 +8,26 @@ import { removeCartItem, updateCartItem } from '../State/Cart/Action';
 import Swal from 'sweetalert2';
 import DeleteIcon from '@mui/icons-material/Delete'; // Import Delete icon';
 import { useNavigate } from 'react-router-dom';
+import Checkbox from '@mui/material/Checkbox';
 
-
-const CartItem = ({ item, onUpdateCart }) => {
-    const navigate = useNavigate()
+const CartItem = ({ item, onUpdateCart, showCheckbox,selectedItemId,setSelectedItemId}) => {
+    const navigate = useNavigate();
     const handleNavigateToRestaurant = (item) => {
-        navigate(`../restaurant/${item.address.city}/${item.name}/${item.id}`)
-    }
+        navigate(`../restaurant/${item.address.city}/${item.name}/${item.id}`);
+    };
     const { auth } = useSelector(store => store);
     const dispatch = useDispatch();
     const jwt = localStorage.getItem('jwt');
+    const handleCheckBoxChange = (itemId) => {
+        // Kiểm tra xem itemId đã có trong danh sách chưa
+        if (selectedItemId.includes(itemId)) {
+            // Nếu có, loại bỏ nó khỏi danh sách
+            setSelectedItemId(selectedItemId.filter(id => id !== itemId));
+        } else {
+            // Nếu không, thêm vào danh sách
+            setSelectedItemId([...selectedItemId, itemId]);
+        }
+    };
     const handleRemoveCartItem = (itemId) => {
         Swal.fire({
             title: 'Are you sure to delete food?',
@@ -33,12 +43,13 @@ const CartItem = ({ item, onUpdateCart }) => {
                 onUpdateCart();
                 Swal.fire(
                     'Deleted!',
-                    'Your file has been deleted.',
+                    'Your food has been deleted.',
                     'success'
                 );
             }
         });
     };
+
     const handleUpdateCartItem = value => {
         if (value === -1 && item.quantity === 1) {
             Swal.fire({
@@ -55,7 +66,7 @@ const CartItem = ({ item, onUpdateCart }) => {
                     onUpdateCart();
                     Swal.fire(
                         'Deleted!',
-                        'Your file has been deleted.',
+                        'Your food has been deleted.',
                         'success'
                     );
                 }
@@ -70,6 +81,12 @@ const CartItem = ({ item, onUpdateCart }) => {
     return (
         <div className='px-5'>
             <div className='lg:flex items-center lg:space-x-5'>
+                {showCheckbox && (
+                    <Checkbox
+                        
+                        onChange={() => handleCheckBoxChange(item.id)}
+                    />
+                )}
                 <div>
                     <img
                         className='w-[5rem] h-[5rem] object-cover cursor-pointer'
@@ -98,10 +115,11 @@ const CartItem = ({ item, onUpdateCart }) => {
                     </div>
                     <div className="flex items-end justify-end w-full">
                         <div className="flex flex-col items-end">
-                            <IconButton color='primary' onClick={() => handleRemoveCartItem(item.id)}>
-                                <DeleteIcon />
-                            </IconButton>
-
+                            {!showCheckbox && (
+                                <IconButton color='primary' onClick={() => handleRemoveCartItem(item.id)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            )}
                         </div>
                     </div>
                 </div>

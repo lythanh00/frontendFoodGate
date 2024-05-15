@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import CartItem from './CartItem';
 import AddressCard from './AddressCard';
-import { Card, Button,IconButton } from '@mui/material';
+import { Card, Button, IconButton } from '@mui/material';
 import { AddLocation } from '@mui/icons-material';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -14,6 +14,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createOrder } from '../State/Order/Action';
 import { useNavigate } from 'react-router-dom'; // Import useHistory
 import { useLocation } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete'; // Import Delete icon';
+import { removeCartItem, updateCartItem } from '../State/Cart/Action';
+import Swal from 'sweetalert2';
+
 export const style = {
   position: 'absolute',
   top: '50%',
@@ -40,12 +44,71 @@ const initialValues = {
 
 const Cart = () => {
   const [refreshPage, setRefreshPage] = useState(false);
+  const [showCheckbox, setShowCheckbox] = useState(false); // State để điều khiển việc hiển thị Checkbox
   const location = useLocation();
   const { cart, auth } = useSelector(store => store)
   const [cartTotal, setCartTotal] = useState(cart.cart?.total || 0);
+  const [selectedItemId, setSelectedItemId] = useState([]);
+  const showToast = (icon, title) => {
+    Swal.fire({
+      icon: icon,
+      title: title,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      customClass: {
+        popup: 'colored-toast',
+        backdrop: 'toast-modal-overlay',
+        // Inline style for z-index
+        popup: 'z-50', // Adjust the value as needed
+        backdrop: 'z-40', // Adjust the value as needed
+        zIndex: 1500, // Use camelCase notation for z-index
+      },
+    });
+    
+  };
+  const handleToggleCheckbox = () => {
+    setShowCheckbox(!showCheckbox);
+  };
   const createOrderUsingSelectedAddress = () => {
 
   }
+
+  const handleDeleteMultiple = () => {
+    if (selectedItemId.length === 0) {
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure to delete the selected foods?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const jwt = localStorage.getItem('jwt');
+
+        // Dispatch các yêu cầu xóa lần lượt
+        selectedItemId.forEach((cartItemId) => {
+          dispatch(removeCartItem({ cartItemId, jwt }));
+        });
+
+        // Xóa các itemId đã chọn sau khi hoàn thành việc gửi yêu cầu
+        setSelectedItemId([]);
+        Swal.fire(
+          'Deleted!',
+          'Your foods has been deleted.',
+          'success'
+        );
+      }
+    });
+
+  };
   const handleOpenAddressModal = () => setOpen(true);
   const [open, setOpen] = React.useState(false);
 
@@ -80,6 +143,7 @@ const Cart = () => {
 
   const handleClose = () => setOpen(false);
   const handleSubmit = (values) => {
+    showToast('success', 'Please wait a few minutes!');
     const data = {
       jwt: localStorage.getItem('jwt'),
       order: {
@@ -98,13 +162,34 @@ const Cart = () => {
     console.log('form value', values)
     const newTotalPay = cart.cart?.total + 33 + 21;
     setCartTotal(newTotalPay);
+    
   }
   return (
     <>
       <main className='lg:flex justify-between'>
         <section className='lg:w-[30%] space-y-6 lg:min-h-screen pt-10'>
+          <div className="flex justify-between items-center">
+            <div className='text-left font-semibold text-2xl cursor-pointer' onClick={handleToggleCheckbox}>
+              Select
+            </div>
+            {showCheckbox && (
+              <IconButton color='primary'>
+                <DeleteIcon onClick={handleDeleteMultiple} />
+              </IconButton>
+            )
+            }
+          </div>
+
+
+
           {cart.cartItems.map((item) => (
-            <CartItem item={item} onUpdateCart={handleUpdateCart} />
+            <CartItem
+              item={item}
+              onUpdateCart={handleUpdateCart}
+              showCheckbox={showCheckbox}
+              selectedItemId={selectedItemId}
+              setSelectedItemId={setSelectedItemId}
+            />
           ))}
           <Divider />
           <div className='billlDetails px-5 text-sm'>
@@ -133,7 +218,7 @@ const Cart = () => {
         <Divider orientation='vertical' flexItem />
         <section className='lg:w-[70%] flex justify-center px-5 pb-10 lg:pb-0'>
           <div>
-            <h1 className='text-center font-semibold text-2xl py-10'>Choose Delivery Address</h1>
+            <h1 className='text-center font-semibold text-2xl py-10' >Choose Delivery Address</h1>
             <div className='flex gap-5 flex-wrap justify-center'>
               {[1, 1, 1, 1, 1].map((item) => <AddressCard handleSelectAddress={createOrderUsingSelectedAddress} item={item} showButton={true} />)}
               <Card className='flex gap-5 w-64 p-5'>
@@ -152,6 +237,18 @@ const Cart = () => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          outline: "none",
+          boxShadow: 24,
+          p: 4,
+          zIndex: 2, // Adjust the value as needed
+        }}
       >
         <Box sx={style}>
           <Formik initialValues={initialValues}
